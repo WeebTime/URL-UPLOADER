@@ -23,6 +23,7 @@ from translation import Translation
 import pyrogram
 logging.getLogger("pyrogram").setLevel(logging.WARNING)
 
+from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from helper_funcs.chat_base import TRChatBase
 
 def GetExpiryDate(chat_id):
@@ -31,13 +32,13 @@ def GetExpiryDate(chat_id):
     return expires_at
 
 
-@pyrogram.Client.on_message(pyrogram.filters.command(["help", "about"]))
-async def help_user(bot, update):
-    # logger.info(update)
-    TRChatBase(update.from_user.id, update.text, "/help")
-    await bot.send_message(
+@pyrogram.Client.on_message(pyrogram.filters.command(["help"]))
+async def send_help(bot, update):
+
+    bot.send_message(
         chat_id=update.chat.id,
         text=Translation.HELP_USER,
+        reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton(text="⭕️ JOIN OUR CHANNEL ⭕️", url="https://t.me/BotLabUpdates")]]),
         parse_mode="html",
         disable_web_page_preview=True,
         reply_to_message_id=update.message_id
@@ -58,14 +59,15 @@ async def get_me_info(bot, update):
         reply_to_message_id=update.message_id
     )
 
-
 @pyrogram.Client.on_message(pyrogram.filters.command(["start"]))
-async def start(bot, update):
-    # logger.info(update)
-    TRChatBase(update.from_user.id, update.text, "/start")
-    await bot.send_message(
+async def send_start(bot, update):
+    
+    bot.send_message(
         chat_id=update.chat.id,
-        text=Translation.START_TEXT,
+        text=script.START_TEXT.format(update.from_user.first_name),
+        reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton(text="⭕️ CHANNEL ⭕️", url="https://t.me/BotLabTeam")],
+        parse_mode="html",
+        disable_web_page_preview=True,
         reply_to_message_id=update.message_id
     )
 
